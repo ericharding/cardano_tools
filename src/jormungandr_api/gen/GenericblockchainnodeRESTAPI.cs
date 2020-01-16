@@ -80,10 +80,11 @@ namespace Jormungandr
         /// </param>
         /// <param name='disposeHttpClient'>
         /// True: will dispose the provided httpClient on calling GenericblockchainnodeRESTAPI.Dispose(). False: will not dispose provided httpClient</param>
-        protected GenericblockchainnodeRESTAPI(HttpClient httpClient, bool disposeHttpClient) : base(httpClient, disposeHttpClient)
-        {
-            Initialize();
-        }
+        // BROKEN after gernation
+      //   protected GenericblockchainnodeRESTAPI(HttpClient httpClient, bool disposeHttpClient) : base(httpClient, disposeHttpClient)
+      //   {
+      //       Initialize();
+      //   }
 
         /// <summary>
         /// Initializes a new instance of the GenericblockchainnodeRESTAPI class.
@@ -194,18 +195,19 @@ namespace Jormungandr
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public GenericblockchainnodeRESTAPI(ServiceClientCredentials credentials, HttpClient httpClient, bool disposeHttpClient) : this(httpClient, disposeHttpClient)
-        {
-            if (credentials == null)
-            {
-                throw new System.ArgumentNullException("credentials");
-            }
-            Credentials = credentials;
-            if (Credentials != null)
-            {
-                Credentials.InitializeServiceClient(this);
-            }
-        }
+        // BROKEN after gernation
+      //   public GenericblockchainnodeRESTAPI(ServiceClientCredentials credentials, HttpClient httpClient, bool disposeHttpClient) : this(httpClient, disposeHttpClient)
+      //   {
+      //       if (credentials == null)
+      //       {
+      //           throw new System.ArgumentNullException("credentials");
+      //       }
+      //       Credentials = credentials;
+      //       if (Credentials != null)
+      //       {
+      //           Credentials.InitializeServiceClient(this);
+      //       }
+      //   }
 
         /// <summary>
         /// Initializes a new instance of the GenericblockchainnodeRESTAPI class.
