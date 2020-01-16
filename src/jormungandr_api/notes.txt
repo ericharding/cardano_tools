@@ -8,7 +8,7 @@ autorest:
 - doesn't like openapi v3
 
 autorest@beta:
-- 
+- ugly names
 
 NSwag:
 
