@@ -1,0 +1,14 @@
+tried:
+
+openapi-generator
+https://github.com/OpenAPITools/openapi-generator
+- old style code
+
+autorest:
+- doesn't like openapi v3
+
+autorest@beta:
+- 
+
+NSwag:
+
