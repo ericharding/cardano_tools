@@ -13,6 +13,7 @@
 namespace MyNamespace
 {
     using System = global::System;
+    using System.Collections.Generic;
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.2.1.0 (NJsonSchema v10.1.3.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class Client 
@@ -3078,7 +3079,8 @@ namespace MyNamespace
         /// <summary>All valid assignments of value stored in accounts to pools</summary>
         [Newtonsoft.Json.JsonProperty("pools", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.ICollection<System.Collections.Generic.ICollection<string>> Pools { get; set; } = new System.Collections.ObjectModel.Collection<System.Collections.ObjectModel.Collection<string>>();
+        public ICollection<ICollection<string>> Pools { get; set; } = 
+         new List<ICollection<string>>();
     
         /// <summary>Total value stored in accounts, but not assigned to any pool</summary>
         [Newtonsoft.Json.JsonProperty("unassigned", Required = Newtonsoft.Json.Required.Always)]
