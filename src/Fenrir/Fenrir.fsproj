@@ -1,12 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
+    <Compile Include="Jormangandr.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="../jormungandr_nswag/jormungandr_nswag.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="argu" Version="6.0.0" />
+  </ItemGroup>
 </Project>
