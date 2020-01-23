@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>fenrir</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../jormungandr_nswag/jormungandr_nswag.csproj" />
