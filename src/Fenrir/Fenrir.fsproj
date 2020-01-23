@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="argu" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.json" Version="12.0.3" />
+    <PackageReference Include="Taskbuilder.fs" Version="2.1.0" />
     <PackageReference Include="Thoth.Json.Net" Version="3.6.0" />
   </ItemGroup>
 </Project>
