@@ -18,7 +18,7 @@ let uri = "http://cerberus:57701"
 let c = Jormangandr.connect(uri)
 
 let stats = 
-  Jormangandr.getDiagnostic c
+  Jormangandr.getNodeStats c
   |> Async.RunSynchronously
 
 match stats with
