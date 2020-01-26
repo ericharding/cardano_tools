@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyName>fenrir</AssemblyName>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>fenrir</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../jormungandr_nswag/jormungandr_nswag.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Async.fs" />
     <Compile Include="Jormangandr.fs" />
     <Compile Include="PoolTool.fs" />
     <Compile Include="Tools/Failover.fs" />

@@ -20,7 +20,7 @@ let test() =
   let c = Jormangandr.connect(uri)
 
   let stats = 
-    Jormangandr.getSettings c
+    Jormangandr.getDiagnostic c
     |> Async.RunSynchronously
 
   match stats with

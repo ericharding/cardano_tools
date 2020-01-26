@@ -18,7 +18,7 @@ let connect baseUri =
   { baseUri = Uri(baseUri, UriKind.Absolute) 
     client = new HttpClient() }
 
-let private get<'a> (c:Connection) method decoder : Async<Result<'a,string>> =
+let private get (c:Connection) method : Async<Result<string,string>> =
   use request = new HttpRequestMessage()
   request.Method <- HttpMethod("GET")
   request.Headers.Accept.Add(Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"))
@@ -30,11 +30,20 @@ let private get<'a> (c:Connection) method decoder : Async<Result<'a,string>> =
     match int response.StatusCode with
     | 200 -> 
       let! data = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-      printfn "%s" data
-      return decoder data
+      return Ok data
     | _ -> 
       return Error (sprintf "Http error %A" response.StatusCode)
   }
+
+let private decode<'a,'e> decode (r:Result<string,'e>) : Result<'a,'e> =
+  match r with
+  | Ok r' ->
+    decode r'
+  | Error e -> Error e
+
+let inline private newtonSoftDecode<'a> r = 
+  Async.map (decode<'a,_> (JsonConvert.DeserializeObject<_> >> Ok)) r
+let inline private defaultDecode<'a> r : Async<Result<'a,string>> = newtonSoftDecode<'a> r
 
 // let private extraCoders = Extra.empty |> Extra.withInt64
 // let private diagDecoder = Decode.Auto.generateDecoderCached<Diagnostics>(extra = extraCoders)
@@ -44,7 +53,7 @@ type Diagnostics = {
   cpu_usage_limit : uint64
 }
 let getDiagnostic (c:Connection) =
-  get<Diagnostics> c "/api/v0/diagnostic" (JsonConvert.DeserializeObject<_> >> Ok)
+  get c "/api/v0/diagnostic" |> defaultDecode<Diagnostics>
 
 type NodeStats = {
   blockRecvCnt : int
@@ -62,7 +71,7 @@ type NodeStats = {
   version: string
 }
 let getNodeStats c =
-  get<NodeStats> c "/api/v0/node/stats" (JsonConvert.DeserializeObject<_> >> Ok)
+  get c "/api/v0/node/stats" |> defaultDecode<NodeStats>
 
 type PerCertificateFee = {
   certificate_pool_registration: uint64
@@ -97,7 +106,7 @@ type TaxType = {
 type Settings = {
   block0Hash : string
   block0Time : string
-  currSlotStartTime: DateTime
+  currSlotStartTime: DateTime // option
   consensusVersion: string
   fees : LinearFee
   blockContentMaxSize : uint32
@@ -110,5 +119,5 @@ type Settings = {
 }
 
 let getSettings c =
-  get<Settings> c "/api/v0/settings" (JsonConvert.DeserializeObject<_> >> Ok)
+  get c "/api/v0/settings" |> defaultDecode<Settings>
 
