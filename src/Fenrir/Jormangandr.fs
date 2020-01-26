@@ -48,6 +48,20 @@ let getDiagnostic (c:Connection) =
 type NodeStats = {
   blockRecvCnt : int
   lastblockContentSize : int
+  lastBlockDate : string
+  lastBlockFees : int
+  lastBlockHash : string
+  lastBlockHeight : int
+  lastBlockSum : int
+  lastBlockTime : DateTime
+  lastReceivedBlockTime: DateTime
+  uptime: int
+  state: string
+  txRecvCnt: string
+  version: string
+  
+
+
 }
 let getNodeStats c =
   get<NodeStats> c "/api/v0/node/stats" (JsonConvert.DeserializeObject<_> >> Ok)

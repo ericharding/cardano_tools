@@ -12,17 +12,31 @@ type Arguments =
               match this with 
               | Url _ -> "Url to connect to"
 
+let usage() =
+  printfn "fenrir <command> [args]"
 
+let test() =
+  let uri = "http://cerberus:57701"
+  let c = Jormangandr.connect(uri)
 
-let uri = "http://cerberus:57701"
-let c = Jormangandr.connect(uri)
+  let stats = 
+    Jormangandr.getNodeStats c
+    |> Async.RunSynchronously
 
-let stats = 
-  Jormangandr.getNodeStats c
-  |> Async.RunSynchronously
+  match stats with
+  | Ok s -> printfn "%A" s.lastBlockHeight
+  | Error e -> printfn "%A" e
 
-match stats with
-| Ok s -> printfn "%A" s
-| Error e -> printfn "%A" e
-// printfn "%A" stats
+let args = 
+  System.Environment.GetCommandLineArgs() 
+  |> List.ofArray 
+  |> List.tail
 
+match args with
+| "test"::_ -> test()
+| "failover"::tail -> Failover.run tail
+| "help"::_
+| [] -> usage()
+| h::_ -> 
+  printfn "Unknown command %s" h
+  
