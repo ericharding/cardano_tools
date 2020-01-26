@@ -34,9 +34,10 @@ let args =
 
 match args with
 | "test"::_ -> test()
-| "failover"::tail -> () //Failover.run tail
+| "failover"::a::b::_ -> 
+  Failover.run (Failover.Node a) (Failover.Node b)
 | "help"::_
 | [] -> usage()
 | h::_ -> 
-  printfn "Unknown command %s" h
+  printfn "Unknown or invalid argument: '%s'" h
   
