@@ -20,11 +20,11 @@ let test() =
   let c = Jormangandr.connect(uri)
 
   let stats = 
-    Jormangandr.getNodeStats c
+    Jormangandr.getSettings c
     |> Async.RunSynchronously
 
   match stats with
-  | Ok s -> printfn "%A" s.lastBlockHeight
+  | Ok s -> printfn "%A" s
   | Error e -> printfn "%A" e
 
 let args = 
@@ -34,7 +34,7 @@ let args =
 
 match args with
 | "test"::_ -> test()
-| "failover"::tail -> Failover.run tail
+| "failover"::tail -> () //Failover.run tail
 | "help"::_
 | [] -> usage()
 | h::_ -> 
