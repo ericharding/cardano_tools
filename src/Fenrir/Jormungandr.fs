@@ -30,6 +30,7 @@ let private get (c:Connection) method : Async<Result<string,string>> =
     match int response.StatusCode with
     | 200 -> 
       let! data = response.Content.ReadAsStringAsync() |> Async.AwaitTask
+      printfn "%s" data
       return Ok data
     | _ -> 
       return Error (sprintf "Http error %A" response.StatusCode)
@@ -41,12 +42,20 @@ let private decode<'a,'e> decode (r:Result<string,'e>) : Result<'a,'e> =
     decode r'
   | Error e -> Error e
 
-let inline private newtonSoftDecode<'a> r = 
-  Async.map (decode<'a,_> (JsonConvert.DeserializeObject<_> >> Ok)) r
-let inline private defaultDecode<'a> r : Async<Result<'a,string>> = newtonSoftDecode<'a> r
+let inline private newtonSoftDecode<'a> r =
+  Async.map (Result.bind (JsonConvert.DeserializeObject<'a> >> Ok)) r
 
-// let private extraCoders = Extra.empty |> Extra.withInt64
-// let private diagDecoder = Decode.Auto.generateDecoderCached<Diagnostics>(extra = extraCoders)
+let private extraCoders = Extra.empty |> Extra.withInt64 |> Extra.withUInt64
+
+let inline private thothDecode<'a> r =
+  let decoder = Decode.Auto.generateDecoderCached<'a>(extra = extraCoders)
+  let fromString = Decode.fromString decoder |> Result.bind
+  Async.map fromString r
+
+let inline private defaultDecode<'a> r : Async<Result<'a,string>> = 
+  // newtonSoftDecode<'a> r
+  thothDecode<'a> r
+
 
 type Diagnostics = {
   open_file_limit : uint32
@@ -64,8 +73,9 @@ type NodeState =
   | Running
 
 type NodeStats = {
+  version: string
   blockRecvCnt : int
-  lastblockContentSize : int
+  lastblockContentSize : int option
   lastBlockDate : string
   lastBlockFees : int
   lastBlockHash : string
@@ -74,48 +84,48 @@ type NodeStats = {
   lastBlockTime : DateTime
   lastReceivedBlockTime: DateTime
   uptime: int
-  state: string
-  txRecvCnt: string
-  version: string
+  state: NodeState
+  txRecvCnt: uint32
 }
 let getNodeStats c =
   get c "/api/v0/node/stats" |> defaultDecode<NodeStats>
 
 type PerCertificateFee = {
-  certificate_pool_registration: uint64
-  certificate_stake_delegation: uint64
-  certificate_owner_stake_delegation: uint64
+  certificate_pool_registration: uint64 option
+  certificate_stake_delegation: uint64 option
+  certificate_owner_stake_delegation: uint64 option
 }
 type LinearFee = {
     constant: uint64
     coefficient: uint64
     certificate: uint64
-    per_certificate_fees: PerCertificateFee
+    per_certificate_fees: PerCertificateFee option
 }
 type Ratio = {
   numerator : uint64
   denominator : uint64
 }
+type CompoundingType = Linear | Halvening
 type RewardParams = {
   // todo: Can we use thoth toth to parse this as a proper DU?
   // see reward_parameters.rs
-  compoundingType : string // Linear / Halvening
-  constant : uint64
-  ratio : Ratio
+  compoundingRatio : Ratio
+  compoundingType : CompoundingType
+  epochRate : uint32
   epochStart : uint64
-  epochRate : uint64
+  initialValue : uint64
 }
 type TaxType = {
   ``fixed`` : uint64
   ratio : Ratio
-  max : uint64
+  max : uint64 option
 }
 // settings.rs
 type Settings = {
   block0Hash : string
   block0Time : DateTime
-  currSlotStartTime: DateTime // option
-  consensusVersion: string
+  currSlotStartTime: DateTime option
+  consensusVersion: string // bft or genesis
   fees : LinearFee
   blockContentMaxSize : uint32
   epochStabilityDepth: uint32

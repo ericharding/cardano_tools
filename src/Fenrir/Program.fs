@@ -21,7 +21,7 @@ let test() =
   let c = Jormungandr.connect(uri)
 
   let stuff = 
-    Jormungandr.getNodeStats c
+    Jormungandr.getSettings c
     |> Async.RunSynchronously
   match stuff with
   | Ok s -> printfn "%A" s
