@@ -15,15 +15,15 @@ type Arguments =
 let usage() =
   printfn "fenrir <command> [args]"
 
+let uri s = new System.Uri(s, System.UriKind.Absolute)
 let test() =
-  let uri = "http://cerberus:57701"
-  let c = Jormangandr.connect(uri)
+  let uri = uri "http://cerberus:57701"
+  let c = Jormungandr.connect(uri)
 
-  let stats = 
-    Jormangandr.getDiagnostic c
+  let stuff = 
+    Jormungandr.getNodeStats c
     |> Async.RunSynchronously
-
-  match stats with
+  match stuff with
   | Ok s -> printfn "%A" s
   | Error e -> printfn "%A" e
 
@@ -34,8 +34,8 @@ let args =
 
 match args with
 | "test"::_ -> test()
-| "failover"::a::b::_ -> 
-  Failover.run (Failover.Node a) (Failover.Node b)
+| "failover"::xs -> 
+  Failover.run xs
 | "help"::_
 | [] -> usage()
 | h::_ -> 

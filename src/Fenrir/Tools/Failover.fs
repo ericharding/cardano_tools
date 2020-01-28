@@ -1,13 +1,64 @@
 module Failover
+open System
+open Log
 
 // Taking inspiration from
 // https://raw.githubusercontent.com/rdlrt/Alternate-Jormungandr-Testnet/master/scripts/jormungandr-leaders-failover.sh
 
-type Node = Node of string
+type Node = {
+  address : Uri
+  connection : Jormungandr.Connection
+}
 
-let run (alpha:Node) (beta:Node) =
-  // todo: convert to Node list
-  let ca = let (Node a) = alpha in Jormangandr.connect a
-  let cb = let (Node b) = beta in Jormangandr.connect b
-  let s = Jormangandr.getSettings ca
+type Settings = {
+  slotDuration : uint64
+  slotsPerEpoch : uint64
+  chainStart : DateTime
+  timeout : TimeSpan
+}
+
+module Option =
+  let ofResult = function
+  | Ok o -> Some o
+  | Error _ -> None
+
+let getScheduleInfo (n:Node) =
+  Jormungandr.getSettings n.connection
+  |> Async.RunSynchronously
+  |> Option.ofResult
+
+let toNode (s:string) =
+  match Uri.TryCreate(s, System.UriKind.Absolute) with
+  | true, uri -> 
+    Some { address = uri; connection = Jormungandr.connect uri }
+  | false, _ -> 
+    log Err "Invalid Uri '%s'" s
+    None
+
+
+let rec main (nodes:Node list) (settings:Settings) =
+  let curSlot = Time.currSlot settings.chainStart settings.slotsPerEpoch settings.slotDuration
+  let diffEpochEnd = settings.slotsPerEpoch - curSlot
+  // Check node stats
+  printfn "%d " diffEpochEnd
   ()
+
+
+let run (addr : string list) =
+  // parse address to uri and remove any invalid
+  let nodes = List.choose toNode addr
+  if List.length nodes = 0 then
+    log Err "Empty node list"
+  else
+    let settings = List.tryPick getScheduleInfo nodes
+    match settings with
+    | None ->
+      log Err "Failed to read settings. Are all nodes down?"
+    | Some s -> 
+      log Info "Starting failover daemon monitoring %i nodes" (List.length nodes)
+      main 
+        nodes
+        { slotsPerEpoch = uint64 s.slotsPerEpoch
+          slotDuration = s.slotDuration
+          chainStart = s.block0Time
+          timeout = TimeSpan.FromSeconds(30.) } 

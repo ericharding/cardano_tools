@@ -8,14 +8,19 @@
     <ProjectReference Include="../jormungandr_nswag/jormungandr_nswag.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Log.fs" />
+    <Compile Include="Time.fs" />
     <Compile Include="Async.fs" />
-    <Compile Include="Jormangandr.fs" />
+    <Compile Include="Jormungandr.fs" />
     <Compile Include="PoolTool.fs" />
     <Compile Include="Tools/Failover.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="argu" Version="6.0.0" />
+    <PackageReference Include="dapper" Version="2.0.30" />
+    <PackageReference Include="Dapper.FSharp" Version="1.3.0" />
+    <PackageReference Include="microsoft.data.sqlite" Version="3.1.1" />
     <PackageReference Include="Newtonsoft.json" Version="12.0.3" />
     <PackageReference Include="Taskbuilder.fs" Version="2.1.0" />
     <PackageReference Include="Thoth.Json.Net" Version="3.6.0" />

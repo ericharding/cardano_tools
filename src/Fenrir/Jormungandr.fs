@@ -1,4 +1,4 @@
-module Jormangandr
+module Jormungandr
 
 open System
 open System.Net.Http
@@ -14,8 +14,8 @@ type Connection = private {
  interface IDisposable with
    member this.Dispose() = this.client.Dispose()
 
-let connect baseUri =
-  { baseUri = Uri(baseUri, UriKind.Absolute) 
+let connect (uri : Uri) =
+  { baseUri = uri
     client = new HttpClient() }
 
 let private get (c:Connection) method : Async<Result<string,string>> =
@@ -54,6 +54,14 @@ type Diagnostics = {
 }
 let getDiagnostic (c:Connection) =
   get c "/api/v0/diagnostic" |> defaultDecode<Diagnostics>
+
+type NodeState =
+  | StartingRestServer
+  | PreparingStorage
+  | PreparingBlock0
+  | Bootstrapping
+  | StartingWorkers
+  | Running
 
 type NodeStats = {
   blockRecvCnt : int
@@ -105,7 +113,7 @@ type TaxType = {
 // settings.rs
 type Settings = {
   block0Hash : string
-  block0Time : string
+  block0Time : DateTime
   currSlotStartTime: DateTime // option
   consensusVersion: string
   fees : LinearFee
@@ -120,4 +128,5 @@ type Settings = {
 
 let getSettings c =
   get c "/api/v0/settings" |> defaultDecode<Settings>
+
 
