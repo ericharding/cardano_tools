@@ -53,6 +53,7 @@ let inline private thothDecode<'a> r =
   Async.map fromString r
 
 let inline private defaultDecode<'a> r : Async<Result<'a,string>> = 
+  // Thoth handles union types out of the box
   // newtonSoftDecode<'a> r
   thothDecode<'a> r
 

@@ -19,7 +19,6 @@ let uri s = new System.Uri(s, System.UriKind.Absolute)
 let test() =
   let uri = uri "http://cerberus:57701"
   let c = Jormungandr.connect(uri)
-
   let stuff = 
     Jormungandr.getSettings c
     |> Async.RunSynchronously
@@ -27,6 +26,7 @@ let test() =
   | Ok s -> printfn "%A" s
   | Error e -> printfn "%A" e
 
+/// main //////////////////////////////////
 let args = 
   System.Environment.GetCommandLineArgs() 
   |> List.ofArray 

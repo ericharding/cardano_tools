@@ -39,7 +39,14 @@ let toNode (s:string) =
 let rec main (nodes:Node list) (settings:Settings) =
   let curSlot = Time.currSlot settings.chainStart settings.slotsPerEpoch settings.slotDuration
   let diffEpochEnd = settings.slotsPerEpoch - curSlot
-  // Check node stats
+  // Check node stats, see which node is ahead
+  // If a node has been ahead for N checks promote it to leader
+
+  // If a node is N blocks behind tip
+  // kill it and restart?
+
+  // get schedule, if we're 5 minutes from scheduled block restart the leader
+  // if we're 1 minute from schedule block and leader isn't healthy promote next
   printfn "%d " diffEpochEnd
   ()
 
