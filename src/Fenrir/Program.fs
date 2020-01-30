@@ -36,6 +36,8 @@ match args with
 | "test"::_ -> test()
 | "failover"::xs -> 
   Failover.run xs
+| "run"::cmd ->
+  NodeRunner.run cmd
 | "help"::_
 | [] -> usage()
 | h::_ -> 

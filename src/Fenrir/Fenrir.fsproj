@@ -13,6 +13,7 @@
     <Compile Include="Async.fs" />
     <Compile Include="Jormungandr.fs" />
     <Compile Include="PoolTool.fs" />
+    <Compile Include="Tools/NodeRunner.fs" />
     <Compile Include="Tools/Failover.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
