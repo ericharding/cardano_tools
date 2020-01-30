@@ -2,7 +2,7 @@ module NodeRunner
 
 
 
-let run (cmd:string[]) =
+let run (cmd:string list) =
   ()
 
 
