@@ -1,5 +1,5 @@
 module NodeRunner
-//Stuck Notifier
+//Stuck Notifier:
 //Threshold time=300s
 //1.  Poll jormungandr node for latest block tip every 5 sec. (+ read logs for key words "stuck notifier")
 //2.  If there the tip does not progress after 300s:
@@ -17,6 +17,12 @@ module NodeRunner
          //if node catches up, send a success! alert to node operator
     //else restart the node--send an alert to operator   
 
+//Keep Node Alive:
+//1. Check if node is running (every 30 seconds or every 10 seconds if block creation < 20 min):
+      //if not running-->restart
+           //if running-->check if bootstrapping (set timer)
+                //if bootstrapping > 5 min.--> send alert to operator
+                //else goto 1
 
 let run (cmd:string list) =
   ()
