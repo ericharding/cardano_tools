@@ -80,7 +80,7 @@ type NodeStats = {
   lastBlockDate : string
   lastBlockFees : int
   lastBlockHash : string
-  lastBlockHeight : int
+  lastBlockHeight : Tip
   lastBlockSum : int
   lastBlockTime : DateTime
   lastReceivedBlockTime: DateTime

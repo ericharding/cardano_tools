@@ -17,11 +17,6 @@ type Settings = {
   timeout : TimeSpan
 }
 
-module Option =
-  let ofResult = function
-  | Ok o -> Some o
-  | Error _ -> None
-
 let getScheduleInfo (n:Node) =
   Jormungandr.getSettings n.connection
   |> Async.RunSynchronously
