@@ -16,7 +16,7 @@ type HeightData = {
   stats : HeightStats
 }
 
-let get (client:HttpClient) : Async<Result<string,string>> =
+let private get (client:HttpClient) : Async<Result<string,string>> =
   use request = new HttpRequestMessage()
   request.Method <- HttpMethod("GET")
   request.Headers.Accept.Add(Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"))
