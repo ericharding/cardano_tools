@@ -40,3 +40,8 @@ let getHeights() =
   get client 
   |> Async.map fromString
   |> Async.RunSynchronously
+
+// https://github.com/papacarp/pooltool.io/blob/master/sendmytip.sh
+let submit poolId userId (data:Jormungandr.NodeStats)  =
+  let platformName = "Fenrir"
+  ()
