@@ -10,6 +10,7 @@ type Schedule = {
   // state : 'a
 }
 
+
 let schedule period action initialState = 
   { id = Guid.NewGuid()
     period = period
