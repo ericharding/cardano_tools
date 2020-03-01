@@ -46,21 +46,51 @@ let rec main (nodes:Node list) (settings:Settings) =
   ()
 
 
+let forIter items = 
+  for i in items do 
+    printfn "%i" i 
+
+let printListOfIntergersStartingAtZero (items:list<string>) =
+  let rec printListOfIntegers index items =
+    match items with 
+    | a::b -> 
+     printfn "%i %s" index a
+     printListOfIntegers (index+1) b
+    | []-> 
+     printfn "end"
+  printListOfIntegers 0 items
+
+
+let sample = ["a";"b";"c"]
+// List.head sample
+// List.tail sample
+printListOfIntergersStartingAtZero sample
+
 let run (addr : string list) =
   // parse address to uri and remove any invalid
-  let nodes = List.choose toNode addr
-  if List.length nodes = 0 then
-    log Err "Empty node list"
-  else
-    let settings = List.tryPick getScheduleInfo nodes
-    match settings with
-    | None ->
-      log Err "Failed to read settings. Are all nodes down?"
-    | Some s -> 
-      log Info "Starting failover daemon monitoring %i nodes" (List.length nodes)
-      main 
-        nodes
-        { slotsPerEpoch = uint64 s.slotsPerEpoch
-          slotDuration = s.slotDuration
-          chainStart = s.block0Time
-          timeout = TimeSpan.FromSeconds(30.) } 
+  for i in addr do 
+    printfn "node %s" i 
+
+  List.iteri (fun i v -> printfn "node %i %s" i v) addr
+  printfn "Addresses: %A" addr
+
+
+run ["abc"; "def"]
+
+
+  // let nodes = List.choose toNode addr
+  // if List.length nodes = 0 then
+  //   log Err "Empty node list"
+  // else
+  //   let settings = List.tryPick getScheduleInfo nodes
+  //   match settings with
+  //   | None ->
+  //     log Err "Failed to read settings. Are all nodes down?"
+  //   | Some s -> 
+  //     log Info "Starting failover daemon monitoring %i nodes" (List.length nodes)
+  //     main 
+  //       nodes
+  //       { slotsPerEpoch = uint64 s.slotsPerEpoch
+  //         slotDuration = s.slotDuration
+  //         chainStart = s.block0Time
+  //         timeout = TimeSpan.FromSeconds(30.) } 
