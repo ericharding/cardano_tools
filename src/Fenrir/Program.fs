@@ -38,6 +38,8 @@ match args with
   Failover.run xs
 | "run"::cmd ->
   NodeRunner.start cmd
+| "pooltool"::"sendlogs"::_ ->
+  PoolTool.SendLogs.sendLogs ()
 | "help"::_
 | [] -> usage()
 | h::_ -> 

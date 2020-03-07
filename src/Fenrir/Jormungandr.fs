@@ -47,9 +47,12 @@ let inline private newtonSoftDecode<'a> r =
 
 let private extraCoders = Extra.empty |> Extra.withInt64 |> Extra.withUInt64
 
-let inline private thothDecode<'a> r =
+let inline private thothDecodeString<'a> s =
   let decoder = Decode.Auto.generateDecoderCached<'a>(extra = extraCoders)
-  let fromString = Decode.fromString decoder |> Result.bind
+  Decode.fromString decoder s
+
+let inline private thothDecode<'a> r =
+  let fromString = thothDecodeString<'a> |> Result.bind
   Async.map fromString r
 
 let inline private defaultDecode<'a> r : Async<Result<'a,string>> = 
@@ -88,8 +91,13 @@ type NodeStats = {
   state: NodeState
   txRecvCnt: uint32
 }
+
 let getNodeStats c =
   get c "/api/v0/node/stats" |> defaultDecode<NodeStats>
+
+let getNodeStatsFromFile file =
+  System.IO.File.ReadAllText file
+  |> thothDecodeString<NodeStats>
 
 type PerCertificateFee = {
   certificate_pool_registration: uint64 option
@@ -141,3 +149,19 @@ let getSettings c =
   get c "/api/v0/settings" |> defaultDecode<Settings>
 
 
+type LeaderLog = {
+  created_at_time : DateTime
+  scheduled_at_time: DateTime
+  scheduled_at_date: string
+  wake_at_time: DateTime option
+  finished_at_time: DateTime option
+  // status : string
+  enclave_leader_id : int
+}
+
+let getLeaderLog c =
+  get c "/api/v0/leaders/logs" |> defaultDecode<LeaderLog[]>
+
+let getLeaderLogFromFile file =
+  let lines = System.IO.File.ReadAllText file
+  thothDecodeString<LeaderLog[]> lines
