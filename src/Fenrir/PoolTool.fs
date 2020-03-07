@@ -94,7 +94,7 @@ module SendLogs =
     //     sendlogsUri, 
     //     headers = [ContentType HttpContentTypes.Json], 
     //     body = TextRequest payload)
-    ()
+    // printfn "Response: %s" r
 
   let sendLogs () =
     let config = getConfig()
