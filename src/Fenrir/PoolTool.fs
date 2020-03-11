@@ -5,8 +5,10 @@ open System
 open Thoth.Json.Net
 open FSharp.Data.HttpRequestHeaders
 
+// pooltool url
 let heightsUri = Uri "https://pooltool.s3-us-west-2.amazonaws.com/stats/heights.json"
 
+// define types for HeightStats and HeightData. majoritymax has a type Tip which is a 32 bit integer. 
 type HeightStats = {
   majoritymax : Tip
   syncd : int
@@ -17,6 +19,7 @@ type HeightData = {
   stats : HeightStats
 }
 
+// connection function 
 let private get (client:HttpClient) : Async<Result<string,string>> =
   use request = new HttpRequestMessage()
   request.Method <- HttpMethod("GET")
@@ -33,7 +36,7 @@ let private get (client:HttpClient) : Async<Result<string,string>> =
     | _ -> 
       return Error (sprintf "Http error %A" response.StatusCode)
   }
-
+// a function that uses the connection function 
 let getHeights() =
   use client = new HttpClient()
   let decoder = Decode.Auto.generateDecoderCached<HeightData>()
@@ -44,7 +47,7 @@ let getHeights() =
 
 // https://github.com/papacarp/pooltool.io/blob/master/sendmytip.sh
 let submit poolId userId (data:Jormungandr.NodeStats)  =
-  let platformName = "Fenrir"
+  let platformName = "SkyLight Fenrir"
   ()
 
 module SendLogs =
@@ -89,12 +92,12 @@ module SendLogs =
         config.userId
         (string assignedSlots)
     printfn "%s" payload
-    // let r = 
-    //   Http.RequestString(
-    //     sendlogsUri, 
-    //     headers = [ContentType HttpContentTypes.Json], 
-    //     body = TextRequest payload)
-    // printfn "Response: %s" r
+    let r = 
+      Http.RequestString(
+        sendlogsUri, 
+        headers = [ContentType HttpContentTypes.Json], 
+        body = TextRequest payload)
+    printfn "Response: %s" r
 
   let sendLogs () =
     let config = getConfig()

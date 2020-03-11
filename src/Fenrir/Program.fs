@@ -2,7 +2,7 @@
 
 open Argu
 
-let oculent_pool = "b628a5f5e987b03151c232b80d59a17e214e7105258c5bf8fc734a55ceb3e8d5"
+let oqulent pool = "b628a5f5e987b03151c232b80d59a17e214e7105258c5bf8fc734a55ceb3e8d5"
 
 type Arguments =
   | Url of string
@@ -15,7 +15,7 @@ type Arguments =
 let usage() =
   printfn "fenrir <command> [args]"
 
-let uri s = new System.Uri(s, System.UriKind.Absolute)
+let uri s = System.Uri(s, System.UriKind.Absolute)
 let test() =
   let uri = uri "http://cerberus:57701"
   let c = Jormungandr.connect(uri)
