@@ -22,7 +22,7 @@ let private get (c:Connection) method : Async<Result<string,string>> =
   use request = new HttpRequestMessage()
   request.Method <- HttpMethod("GET")
   request.Headers.Accept.Add(Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"))
-  request.RequestUri <- new Uri(c.baseUri, Uri(method, UriKind.Relative))
+  request.RequestUri <- Uri(c.baseUri, Uri(method, UriKind.Relative))
   async {
     let! response = 
       c.client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)

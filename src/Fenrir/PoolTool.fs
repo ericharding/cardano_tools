@@ -70,8 +70,8 @@ module SendLogs =
     { poolId = getenv "MY_POOL_ID" badValue
       userId = getenv "MY_USER_ID" badValue
       genesis = getenv "THIS_GENESIS" "8e4d2a343f3dcf93" 
-      statsFile = "C:/hg/cardano_tools/tmp/stats.log"
-      leaderFile = "C:/hg/cardano_tools/tmp/leader.log"
+      statsFile = "stats.log"
+      leaderFile = "leader.log"
     }
 
   let submitData (config:SendLogsConfig) (epoch:string) (leader:Jormungandr.LeaderLog[]) =
