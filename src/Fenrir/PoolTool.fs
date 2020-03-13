@@ -1,4 +1,4 @@
-module PoolTool
+module PoolTool 
 open FSharp.Data
 open System.Net.Http
 open System
@@ -8,12 +8,13 @@ open FSharp.Data.HttpRequestHeaders
 // pooltool url
 let heightsUri = Uri "https://pooltool.s3-us-west-2.amazonaws.com/stats/heights.json"
 
-// define types for HeightStats and HeightData. majoritymax has a type Tip which is a 32 bit integer. 
+// define types for HeightStats. majoritymax has a type Tip which is a 32 bit integer. 
 type HeightStats = {
   majoritymax : Tip
   syncd : int
   samples : int
 }
+// HeightData is a type that takes HeightStats and HeightsStats.Tip as its input?
 type HeightData = {
   tips : Map<string,Tip>
   stats : HeightStats
@@ -36,6 +37,7 @@ let private get (client:HttpClient) : Async<Result<string,string>> =
     | _ -> 
       return Error (sprintf "Http error %A" response.StatusCode)
   }
+
 // a function that uses the connection function 
 let getHeights() =
   use client = new HttpClient()
@@ -51,7 +53,6 @@ let submit poolId userId (data:Jormungandr.NodeStats)  =
   ()
 
 module SendLogs =
-  open FSharp.Data
   type SendLogsConfig = {
     // apiPort : uint32
     poolId : string
