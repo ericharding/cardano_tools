@@ -5,7 +5,6 @@ open System.Net.Http
 open Thoth.Json.Net
 open Newtonsoft.Json
 
-
 type Connection = private {
   baseUri: Uri
   client : HttpClient
@@ -76,6 +75,16 @@ type NodeState =
   | StartingWorkers
   | Running
 
+type LeaderLog = {
+  created_at_time : DateTime
+  scheduled_at_time: DateTime
+  scheduled_at_date: string
+  wake_at_time: DateTime option
+  finished_at_time: DateTime option
+  // status : string
+  enclave_leader_id : int
+}
+
 type NodeStats = {
   version: string
   blockRecvCnt : int
@@ -91,6 +100,13 @@ type NodeStats = {
   state: NodeState
   txRecvCnt: uint32
 }
+
+let getLeaderLog c =
+  get c "/api/v0/leaders/logs" |> defaultDecode<LeaderLog[]>
+
+let getLeaderLogFromFile file =
+  let lines = System.IO.File.ReadAllText file
+  thothDecodeString<LeaderLog[]> lines
 
 let getNodeStats c =
   get c "/api/v0/node/stats" |> defaultDecode<NodeStats>
@@ -129,6 +145,7 @@ type TaxType = {
   ratio : Ratio
   max : uint64 option
 }
+
 // settings.rs
 type Settings = {
   block0Hash : string
@@ -149,19 +166,4 @@ let getSettings c =
   get c "/api/v0/settings" |> defaultDecode<Settings>
 
 
-type LeaderLog = {
-  created_at_time : DateTime
-  scheduled_at_time: DateTime
-  scheduled_at_date: string
-  wake_at_time: DateTime option
-  finished_at_time: DateTime option
-  // status : string
-  enclave_leader_id : int
-}
 
-let getLeaderLog c =
-  get c "/api/v0/leaders/logs" |> defaultDecode<LeaderLog[]>
-
-let getLeaderLogFromFile file =
-  let lines = System.IO.File.ReadAllText file
-  thothDecodeString<LeaderLog[]> lines
