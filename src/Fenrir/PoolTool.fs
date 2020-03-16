@@ -51,7 +51,8 @@ let getHeights() =
 let submit poolId userId (data:Jormungandr.NodeStats)  =
   let platformName = "SkyLight Fenrir"
   ()
-
+    
+// Why place this in a module?
 module SendLogs =
   type SendLogsConfig = {
     // apiPort : uint32
@@ -99,7 +100,7 @@ module SendLogs =
         headers = [ContentType HttpContentTypes.Json], 
         body = TextRequest payload)
     printfn "Response: %s" r
-
+    
   let sendLogs () =
     let config = getConfig()
     if config.poolId = badValue || config.userId = badValue then

@@ -17,6 +17,19 @@ let connect (uri : Uri) =
   { baseUri = uri
     client = new HttpClient() }
 
+type SSHConnection = private {
+  // address: HostIP
+  // client: ssh_client 
+}
+
+let SSHConnect (address:hostIP) =
+  {address = host
+   client = new SSH_client()
+  }
+
+let private secureconnect (c:secureconnection) method: Async<Result<string,string>> =
+  use request = new SSHConnect
+
 let private get (c:Connection) method : Async<Result<string,string>> =
   use request = new HttpRequestMessage()
   request.Method <- HttpMethod("GET")
